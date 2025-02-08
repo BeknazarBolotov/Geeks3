@@ -30,6 +30,19 @@ async def meme_handler(message: types.Message):
 
 
 @dp.message_handler()
+async def echo_or_square(message: types.Message):
+    text = message.text
+    if text.isdigit():
+        squared = int(text) ** 2
+        await message.answer(str(squared))
+    else:
+        await message.answer(text)
+
+
+
+
+
+@dp.message_handler()
 async def echo_handler(message: types.Message):
     await message.answer(message.text)
 
