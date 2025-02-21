@@ -1,53 +1,31 @@
-from aiogram import types, Dispatcher, Bot, executor
-from decouple import config
+from aiogram import executor
 import logging
+from config import dp, bot, Admins
+from handlers import commands, echo, quiz
+import buttons
 
-token = config('TOKEN')
+async def on_startup(_):
+    for admin in Admins:
+        await bot.send_message(chat_id=admin, text='Бот включен!')
 
-bot = Bot(token=token)
-dp = Dispatcher(bot)
+async def on_shutdown(_):
+    for admin in Admins:
+        await bot.send_message(chat_id=admin, text='Бот выключен!')
 
-
-Admins = [996746876, ]
-
-
-@dp.message_handler(commands='start')
-async def start_handler(message: types.Message):
-    print('Обработчик старта')
-    await bot.send_message(chat_id=message.from_user.id,
-                           text=f"Hello {message.from_user.first_name}\n"
-                                f"Твой Telegram ID - {message.from_user.id}\n")
-    await message.answer('Hello world!')
-
-
-
-@dp.message_handler(commands="meme")
-async def meme_handler(message: types.Message):
-    with open('media/images.jpg', 'rb') as photo:
-        await bot.send_photo(chat_id=message.from_user.id,
-                            photo = photo)
-
-
-
-@dp.message_handler()
-async def echo_or_square(message: types.Message):
-    text = message.text
-    try:
-        number = float(text)
-        squared = number ** 2
-        await message.answer(str(squared))
-    except ValueError:
-        await message.answer(text)
-
-
-
-
-
-@dp.message_handler()
-async def echo_handler(message: types.Message):
-    await message.answer(message.text)
 
 
 if __name__ == '__main__':
+    commands.register_handlers(dp)
+    quiz.register_handlers(dp)
+    echo.register_handlers(dp)
+
     logging.basicConfig(level=logging.INFO)
-    executor.start_polling(dp, skip_updates=True)
+    executor.start_polling(dp, skip_updates=True, on_startup=on_startup, on_shutdown=on_shutdown)
+
+
+
+
+
+
+
+
