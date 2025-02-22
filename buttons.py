@@ -7,7 +7,7 @@ cancel_fsm = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True, one_time_key
 
 start = ReplyKeyboardMarkup(row_width=2, one_time_keyboard=True)
 start_buttons = KeyboardButton('/start')
-mem_buttons = KeyboardButton('/mem')
+mem_buttons = KeyboardButton('/meme')
 quiz_buttons = KeyboardButton('/quiz')
 reg_buttons = KeyboardButton('/registration')
 store_buttons = KeyboardButton("/store")

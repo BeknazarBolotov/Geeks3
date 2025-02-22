@@ -1,6 +1,7 @@
 from aiogram import types, Dispatcher
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from config import bot
+import random
 
 async def quiz(message: types.Message):
     keyboard = InlineKeyboardMarkup()
@@ -53,7 +54,12 @@ async def quiz_3(call: types.CallbackQuery):
         correct_option_id=2,
     )
 
+async def roll_dice(message: types.CallbackQuery):
+    dice_value = random.randint(1, 6)
+    await message.reply(f"🎲 Бросок кости: {dice_value}")
+
 def register_handlers(dp: Dispatcher):
     dp.register_message_handler(quiz, commands=['quiz'])
     dp.register_callback_query_handler(quiz_2, text='button_1')
     dp.register_callback_query_handler(quiz_3, text='button_2')
+    dp.register_message_handler(roll_dice, commands=['dice'])
