@@ -2,11 +2,6 @@ from aiogram import types, Dispatcher
 from random import choice
 
 
-
-def register_handlers(dp: Dispatcher):
-    dp.register_message_handler(echo_handler)
-
-
 async def echo_handler(message: types.Message):
     text = message.text
     if text == "game":
@@ -21,3 +16,6 @@ async def echo_handler(message: types.Message):
         except ValueError:
             await message.answer(text)
 
+
+def register_handlers(dp: Dispatcher):
+    dp.register_message_handler(echo_handler)
