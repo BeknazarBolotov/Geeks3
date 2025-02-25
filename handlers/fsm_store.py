@@ -11,6 +11,8 @@ class FSM_store(StatesGroup):
     photo = State()
     product_id = State()
     infoproduct = State()
+    collection = State()
+    collection_id = State()
     submit = State()
 
 
@@ -71,6 +73,21 @@ async def load_infoproduct(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['infoproduct'] = message.text
 
+        await FSM_store.next()
+        await message.answer("Коллекция: ")
+
+async def load_collection(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['collection'] = message.text
+
+    await FSM_store.next()
+    await message.answer("ID коллекции: ")
+
+
+async def load_collection_id(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['collection_id'] = message.text
+
     await FSM_store.next()
     await message.answer('Верные ли данные')
     await message.answer_photo(photo=data['photo'],
@@ -80,7 +97,9 @@ async def load_infoproduct(message: types.Message, state: FSMContext):
                                        f'Стоимость - {data["price"]}\n'
                                        f'Фото - {data["photo"]}\n'
                                        f'id продукта - {data["product_id"]}\n'
-                                       f'Информация - {data["infoproduct"]}')
+                                       f'Информация - {data["infoproduct"]}\n'
+                                       f'Коллекция - {data["collection"]}\n'
+                                       f'ID коллекции - {data["collection_id"]}')
 
 async def submit(message: types.Message, state: FSMContext):
     if message.text == 'да':
@@ -95,6 +114,10 @@ async def submit(message: types.Message, state: FSMContext):
                 product_id=data['product_id'],
                 category=data['category'],
                 infoproduct=data['infoproduct']
+            )
+            await main_db.sql_insert_collection_products(
+                product_id=data['collection_id'],
+                collection=data['collection']
             )
 
 
@@ -118,4 +141,6 @@ def register_handlers_fsm(dp: Dispatcher):
     dp.register_message_handler(load_photo, state=FSM_store.photo, content_types=['photo'])
     dp.register_message_handler(load_product_id, state=FSM_store.product_id)
     dp.register_message_handler(load_infoproduct, state=FSM_store.infoproduct)
+    dp.register_message_handler(load_collection, state=FSM_store.collection)
+    dp.register_message_handler(load_collection_id, state=FSM_store.collection_id)
     dp.register_message_handler(submit, state=FSM_store.submit)
