@@ -20,6 +20,7 @@ INSERT_TABLE_registered = """
 TABLE_store = """
     CREATE TABLE IF NOT EXISTS store (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    product_id TEXT,
     product_name TEXT,
     size TEXT,
     price TEXT,
@@ -27,8 +28,8 @@ TABLE_store = """
     )
 """
 INSERT_TABLE_store = """
-    INSERT INTO store (product_name, size, price, photo)
-    VALUES (?, ?, ?, ?)
+    INSERT INTO store (pproduct_id, product_name, size, price, photo)
+    VALUES (?, ?, ?, ?, ?)
 """
 
 

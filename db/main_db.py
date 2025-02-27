@@ -41,7 +41,8 @@ def fetch_all_products():
     conn = get_db_connection()
     products = conn.execute("""
     select * from store s
-    INNER JOIN product_detail pd on s.product_id = pd.product_id
+    INNER JOIN product_detail pd on s.id= pd.id
+    INNER JOIN collection_products cp on  s.id = cp.id
     """).fetchall()
     conn.close()
     return products
@@ -55,3 +56,9 @@ def delete_products(product_id):
 
     conn.commit()
     conn.close()
+
+
+
+
+
+

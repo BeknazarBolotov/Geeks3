@@ -98,13 +98,13 @@ async def load_collection_id(message: types.Message, state: FSMContext):
                                        f'Фото - {data["photo"]}\n'
                                        f'id продукта - {data["product_id"]}\n'
                                        f'Информация - {data["infoproduct"]}\n'
-                                       f'Коллекция - {data["collection"]}\n'
-                                       f'ID коллекции - {data["collection_id"]}')
+                                       f'Коллекция - {data["collection"]}\n')
 
 async def submit(message: types.Message, state: FSMContext):
     if message.text == 'да':
         async with state.proxy() as data:
             await main_db.sql_insert_store(
+                product_id=data['product_id'],
                 product_name=data['product_name'],
                 size=data['size'],
                 price=data['price'],
@@ -116,7 +116,7 @@ async def submit(message: types.Message, state: FSMContext):
                 infoproduct=data['infoproduct']
             )
             await main_db.sql_insert_collection_products(
-                product_id=data['collection_id'],
+                product_id=data['product_id'],
                 collection=data['collection']
             )
 
